@@ -1,4 +1,5 @@
 var express = require('express');
+const controller = require('./controller');
 var app = express();
 app.use(express.static('public'));
 
@@ -7,7 +8,8 @@ app.get("/", function (req, res) {
 });
 
 app.get("/search/:term", function(req, res) {
-  res.send("You searched for " + req.params.term);
+  res.send(controller.searchResults(req.params.term));
+  //res.send(JSON.stringify({url: "tbd", snippet: "tbd", thumbnail: "tbd", context: "tbd"}));
 })
 
 app.get("/recent", function(req, res) {
