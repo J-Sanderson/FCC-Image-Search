@@ -1,15 +1,22 @@
-var request = require('request');
 
-module.exports.searchResults = function(search) {
-  var url = 'https://www.google.co.uk/search?q='
-  + search
-  + '&dcr=0&source=lnms&tbm=isch&sa=X&ved=0ahUKEwjd0OCj9aTWAhXkCMAKHTTjDtUQ_AUICigB&biw=1280&bih=918'
-  request(url, function(err, response, html) {
+var Flickr = require("node-flickr");
+var keys = {"api_key": process.env.KEY}
+
+module.exports.searchResults = function(searchVal, res) {
+  var flickr = new Flickr(keys);
+  flickr.get("photos.search", {"tags": searchVal}, function(err, result){
     if (err) throw err;
-    //div id="rg" - contains results
-    //div class="_aOd rg_ilm"
-    html = html.split('<div id="search">')[1]// pull out the search results
-    .split('<a href="/url?q'); //split results - first result is [1]
-    console.log(html);
+    console.log(result.photos.photo);
+    //create array to hold results to return
+    var resList = [];
+    //get first ten results
+    for (var i = 0; i <10; i++) {
+      resList.push({
+        url: 'https://www.flickr.com/photos/' + result.photos.photo[i].owner + '/' + result.photos.photo[i].id,
+        title: result.photos.photo[i].title
+      })
+    }
+    //return array
+    res.send(resList);
   });
 }
