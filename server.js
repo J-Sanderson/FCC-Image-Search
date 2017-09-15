@@ -8,8 +8,7 @@ app.get("/", function (req, res) {
 });
 
 app.get("/search/:term", function(req, res) {
-  res.send(controller.searchResults(req.params.term));
-  //res.send(JSON.stringify({url: "tbd", snippet: "tbd", thumbnail: "tbd", context: "tbd"}));
+  controller.searchResults(req.params.term, res);
 })
 
 app.get("/recent", function(req, res) {
